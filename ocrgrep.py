@@ -74,10 +74,6 @@ def ocr(path: Path, args: argparse.Namespace):
     return results
 
 def cli():
-    # show screen ai download prompt if its not present
-    x = ScreenAI()
-    del x
-
     p = argparse.ArgumentParser(
         description='grep-like OCR tool for images and videos.',
         epilog='example: %(prog)s -i "hello world" video.mp4 screenshot.png',
