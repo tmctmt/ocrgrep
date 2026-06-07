@@ -77,7 +77,7 @@ def cli():
     p.add_argument('-i', '--ignore-case', action='store_true',
                    help='ignore case distinctions in patterns and data')
     p.add_argument('-m', '--max-count', type=int, metavar='NUM',
-                   help='stop after NUM selected lines')
+                   help='stop scanning file after NUM matches')
     p.add_argument('-p', '--progress', action='store_true',
                    help='show progress bar')
     p.add_argument('-r', '--recursive', action='store_true',
