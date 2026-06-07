@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import timedelta
 from fnmatch import fnmatch
 from functools import partial
-from multiprocessing import Pool, cpu_count
+from multiprocessing import Pool, cpu_count, set_start_method
 from pathlib import Path
 import argparse
 import re
@@ -128,6 +128,7 @@ def cli():
         else:
             print(f'ocrgrep: {path}: No such file or directory', file=sys.stderr)
 
+    set_start_method('spawn')
     with Pool(args.workers) as pool, tqdm(total=len(files), disable=not args.progress) as pbar:
         for results in pool.imap_unordered(partial(ocr, args=args), files):
             count = 0
