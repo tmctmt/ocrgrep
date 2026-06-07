@@ -108,6 +108,7 @@ def cli():
                    help='show this help message and exit')
     
     args = p.parse_args()
+    pattern = re.escape(args.pattern) if args.fixed_strings else args.pattern
     flags = re.IGNORECASE if args.ignore_case else 0
 
     def should_include(path: Path):
@@ -134,14 +135,14 @@ def cli():
             count = 0
             for result in results:
                 text = re.sub(r'\s+', r' ', result.text)
-                if match := re.search(args.pattern, text, flags=flags):
+                if match := re.search(pattern, text, flags=flags):
                     line = ''
                     if not args.no_filename:
                         line += MAGENTA + str(result.path) + RESET + ':'
                     if not args.no_timestamp and isinstance(result, VideoResult):
                         line += YELLOW + str(timedelta(milliseconds=result.msec))[:-3] + RESET + ':'
                     line += re.sub(
-                        re.escape(args.pattern) if args.fixed_strings else args.pattern,
+                        pattern,
                         lambda m: RED + m.group(0) + RESET,
                         text[max(0, match.start() - args.context) : match.end() + args.context].strip(),
                         flags=flags

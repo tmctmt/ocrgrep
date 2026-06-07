@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ocrgrep"
-version = "0.1.0"
+version = "0.1.1"
 description = "grep-like OCR tool for images and videos."
 readme = "README.md"
 authors = [
