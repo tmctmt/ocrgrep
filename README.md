@@ -38,7 +38,7 @@ options:
   
 # Install
 ```
-pip install git+https://github.com/sergiocorreia/clv-locro.git
+pip install git+https://github.com/sergiocorreia/clv-locro.git@ba53ee24ee649e39c23daee3c8e9bec946642743
 locro download
 pip install ocrgrep
 ```
