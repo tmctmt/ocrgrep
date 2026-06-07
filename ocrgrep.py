@@ -42,33 +42,25 @@ def ocr(path: Path, args: argparse.Namespace):
     
     if filetype.is_video(path) and not args.no_video:
         cap = cv2.VideoCapture(path)
-        prev_msec = None
-
         if cap.get(cv2.CAP_PROP_FRAME_COUNT) == -1:
             return results
-
+        prev_msec = None
         while True:
             msec = cap.get(cv2.CAP_PROP_POS_MSEC)
-
             if args.video_max_msec and msec > args.video_max_msec:
                 break
-
             if prev_msec and (msec - prev_msec) < args.video_step_msec:
                 success = cap.grab()
                 if success:
                     continue
                 break
-
             prev_msec = msec
-
             success, image = cap.read()
             if not success:
                 break
-
             image = PIL.Image.fromarray(image)
             text = engine.ocr_pil_image(image).text
             results.append(VideoResult(path, text, msec))
-
         cap.release()
             
     return results
@@ -141,8 +133,7 @@ def cli():
             count = 0
             for result in results:
                 text = re.sub(r'\s+', r' ', result.text)
-                match = re.search(args.pattern, text, flags=flags)
-                if match:
+                if match := re.search(args.pattern, text, flags=flags):
                     line = ''
                     if not args.no_filename:
                         line += MAGENTA + str(result.path) + RESET + ':'
@@ -156,7 +147,7 @@ def cli():
                     )
                     pbar.write(line)
                     count += 1
-                    if args.max_count and count == args.max_count:
+                    if count == args.max_count:
                         break
             pbar.update()
 
