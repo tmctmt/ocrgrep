@@ -7,12 +7,15 @@ from pathlib import Path
 import argparse
 import re
 import sys
+import warnings
 
 from locro import ScreenAI
 from tqdm import tqdm
 import cv2
 import filetype
 import PIL
+
+warnings.filterwarnings('ignore', category=UserWarning, module='PIL')
 
 RED = '\033[31m'
 YELLOW = '\033[33m'
@@ -32,37 +35,41 @@ def ocr(path: Path, args: argparse.Namespace):
     if 'engine' not in globals():
         global engine
         engine = ScreenAI()
-
-    results: list[Result] = []
-
-    if filetype.is_image(path) and not args.no_image:
-        image = PIL.Image.open(path)
-        text = engine.ocr_pil_image(image).text
-        results.append(Result(path, text))
     
-    if filetype.is_video(path) and not args.no_video:
-        cap = cv2.VideoCapture(path)
-        if cap.get(cv2.CAP_PROP_FRAME_COUNT) == -1:
-            return results
-        prev_msec = None
-        while True:
-            msec = cap.get(cv2.CAP_PROP_POS_MSEC)
-            if args.video_max_msec and msec > args.video_max_msec:
-                break
-            if prev_msec and (msec - prev_msec) < args.video_step_msec:
-                success = cap.grab()
-                if success:
-                    continue
-                break
-            prev_msec = msec
-            success, image = cap.read()
-            if not success:
-                break
-            image = PIL.Image.fromarray(image)
+    results: list[Result] = []
+    
+    try:
+        if filetype.is_image(path) and not args.no_image:
+            image = PIL.Image.open(path)
             text = engine.ocr_pil_image(image).text
-            results.append(VideoResult(path, text, msec))
-        cap.release()
-            
+            results.append(Result(path, text))
+        
+        if filetype.is_video(path) and not args.no_video:
+            cap = cv2.VideoCapture(path)
+            if cap.get(cv2.CAP_PROP_FRAME_COUNT) == -1:
+                return results
+            prev_msec = None
+            while True:
+                msec = cap.get(cv2.CAP_PROP_POS_MSEC)
+                if args.video_max_msec and msec > args.video_max_msec:
+                    break
+                if prev_msec and (msec - prev_msec) < args.video_step_msec:
+                    success = cap.grab()
+                    if success:
+                        continue
+                    break
+                prev_msec = msec
+                success, image = cap.read()
+                if not success:
+                    break
+                image = PIL.Image.fromarray(image)
+                text = engine.ocr_pil_image(image).text
+                results.append(VideoResult(path, text, msec))
+            cap.release()
+
+    except (OSError, cv2.error):
+        pass
+
     return results
 
 def cli():
