@@ -1,4 +1,6 @@
 ## ocrgrep
+![PyPI - Version](https://img.shields.io/pypi/v/ocrgrep)
+
 A grep-like OCR tool for image and video files, utilizing the fast and decently accurate [Chrome Screen AI](https://chromium.googlesource.com/chromium/src/+/refs/tags/126.0.6452.4/services/screen_ai/README.md) engine via [locro](https://github.com/sergiocorreia/clv-locro/tree/master). No indexing needed.
 
 ```
