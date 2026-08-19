@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ocrgrep"
-version = "0.1.1"
+version = "0.2.0"
 description = "grep-like OCR tool for images and videos."
 readme = "README.md"
 authors = [
@@ -24,10 +24,11 @@ classifiers = [
 ]
 keywords = ["ocr", "grep", "screen ai", "chrome", "locro"]
 dependencies = [
-    "tqdm ~= 4.0",
-    "opencv-python ~= 4.0",
     "filetype ~= 1.0",
-    "Pillow ~= 12.0"
+    "opencv-python ~= 4.0",
+    "Pillow ~= 12.0",
+    "pymupdf ~= 1.0",
+    "tqdm ~= 4.0"
 ]
 [project.scripts]
 ocrgrep = "ocrgrep:cli"
