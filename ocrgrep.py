@@ -1,5 +1,6 @@
 import argparse
 import re
+import signal
 import sys
 import warnings
 from dataclasses import dataclass
@@ -133,6 +134,10 @@ def ocr(path: Path, args: argparse.Namespace):
     return path, results
 
 
+def _init_worker():
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+
+
 def cli():
     p = argparse.ArgumentParser(
         description='grep-like OCR tool for images and videos.',
@@ -210,7 +215,7 @@ def cli():
                       file=sys.stderr)
 
     set_start_method('spawn')
-    with Pool(args.workers) as pool, tqdm(disable=not args.progress) as pbar:
+    with Pool(args.workers, initializer=_init_worker) as pool, tqdm(disable=not args.progress) as pbar:
         for path, results in pool.imap_unordered(partial(ocr, args=args), iterate_files()):
             count = 0
             for result in results:
@@ -240,4 +245,7 @@ def cli():
 
 
 if __name__ == '__main__':
-    cli()
+    try:
+        cli()
+    except KeyboardInterrupt:
+        sys.exit(130)
