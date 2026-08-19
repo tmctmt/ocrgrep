@@ -243,9 +243,11 @@ def cli():
                     break
             pbar.update()
 
-
-if __name__ == '__main__':
+def quiet_cli():
     try:
         cli()
     except KeyboardInterrupt:
         sys.exit(130)
+
+if __name__ == '__main__':
+    quiet_cli()

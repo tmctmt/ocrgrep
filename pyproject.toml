@@ -31,4 +31,4 @@ dependencies = [
     "tqdm ~= 4.0"
 ]
 [project.scripts]
-ocrgrep = "ocrgrep:cli"
+ocrgrep = "ocrgrep:quiet_cli"
