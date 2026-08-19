@@ -2,7 +2,7 @@
 A grep-like OCR tool for image, video and document files, utilizing the fast and accurate [Chrome Screen AI](https://chromium.googlesource.com/chromium/src/+/refs/tags/126.0.6452.4/services/screen_ai/README.md) engine via [locro](https://github.com/sergiocorreia/clv-locro/tree/master).
 
 ```
-$ ocrgrep -ih 'grep-like' screenshot.png    
+$ ocrgrep -h grep-like screenshot.png    
 rep README.md in main Preview ocrgrep A grep-like OCR tool for image and video files, uti
 ```
 
